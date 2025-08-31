@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<title>Prediction Result</title>
+	<style>
+		body { font-family: Arial, sans-serif; margin: 40px; }
+		.container { max-width: 800px; margin: auto; }
+		.message { font-size: 1.3em; margin-bottom: 10px; }
+		.good { color: #2e7d32; }
+		.bad { color: #c62828; }
+		.btn { display: inline-block; padding: 8px 12px; border: 1px solid #ccc; border-radius: 6px; text-decoration: none; }
+	</style>
+</head>
+<body>
+	<div class="container">
+		<h1>Prediction Result</h1>
+		<p class="message {% if is_fraud %}bad{% else %}good{% endif %}">{{ message }}</p>
+		{% if probability is not None %}
+			<p>Model fraud probability: <strong>{{ probability|floatformat:3 }}</strong></p>
+		{% endif %}
+		{% if defaulted_fields or clipped_fields %}
+			<div>
+				<h3>Input adjustments</h3>
+				{% if defaulted_fields %}
+					<p>Used dataset medians for: <em>{{ defaulted_fields|join:', ' }}</em></p>
+				{% endif %}
+				{% if clipped_fields %}
+					<p>Clipped to training range for: <em>{{ clipped_fields|join:', ' }}</em></p>
+				{% endif %}
+			</div>
+		{% endif %}
+		<p><a class="btn" href="{% url 'home' %}">Try another transaction</a></p>
+	</div>
+</body>
+</html> 

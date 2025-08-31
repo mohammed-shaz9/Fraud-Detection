@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<title>Fraud Detector</title>
+	<style>
+		body { font-family: Arial, sans-serif; margin: 40px; }
+		.container { max-width: 800px; margin: auto; }
+		.card { border: 1px solid #ddd; border-radius: 8px; padding: 20px; }
+		.row { display: flex; gap: 16px; }
+		.col { flex: 1; }
+		label { display: block; font-weight: bold; margin-top: 10px; }
+		input { width: 100%; padding: 8px; margin-top: 6px; }
+		button { margin-top: 16px; padding: 10px 16px; cursor: pointer; }
+		.note { color: #555; font-size: 0.95em; }
+		.error { color: #b00020; }
+		.badge { display: inline-block; padding: 4px 8px; border-radius: 4px; background: #eee; margin-left: 8px; }
+		details { margin-top: 16px; }
+	</style>
+</head>
+<body>
+	<div class="container">
+		<h1>Credit Card Fraud Detector</h1>
+		<p class="note">Enter basic transaction details. Advanced features default to dataset medians unless specified. Inputs may be clipped to the training range.</p>
+		{% if error %}
+			<p class="error">{{ error }}</p>
+		{% endif %}
+		{% if not model_ready %}
+			<p class="error">Model file not found. Please run the training script to generate <code>fraud_model.pkl</code>.</p>
+		{% endif %}
+
+		<div class="card">
+			<form method="POST" action="{% url 'predict' %}">
+				{% csrf_token %}
+				<div class="row">
+					<div class="col">
+						<label for="Time">Time <span class="badge">seconds</span></label>
+						<input type="number" step="any" min="0" name="Time" id="Time" placeholder="e.g., 10000" required />
+					</div>
+					<div class="col">
+						<label for="Amount">Amount <span class="badge">currency</span></label>
+						<input type="number" step="any" min="0" name="Amount" id="Amount" placeholder="e.g., 123.45" required />
+					</div>
+				</div>
+
+				<details>
+					<summary>Advanced: Provide PCA features (V1..V28) manually (optional)</summary>
+					<div class="row">
+						<div class="col">
+							<label for="V1">V1</label>
+							<input type="number" step="any" name="V1" id="V1" />
+							<label for="V2">V2</label>
+							<input type="number" step="any" name="V2" id="V2" />
+							<label for="V3">V3</label>
+							<input type="number" step="any" name="V3" id="V3" />
+							<label for="V4">V4</label>
+							<input type="number" step="any" name="V4" id="V4" />
+							<label for="V5">V5</label>
+							<input type="number" step="any" name="V5" id="V5" />
+							<label for="V6">V6</label>
+							<input type="number" step="any" name="V6" id="V6" />
+							<label for="V7">V7</label>
+							<input type="number" step="any" name="V7" id="V7" />
+							<label for="V8">V8</label>
+							<input type="number" step="any" name="V8" id="V8" />
+							<label for="V9">V9</label>
+							<input type="number" step="any" name="V9" id="V9" />
+							<label for="V10">V10</label>
+							<input type="number" step="any" name="V10" id="V10" />
+						</div>
+						<div class="col">
+							<label for="V11">V11</label>
+							<input type="number" step="any" name="V11" id="V11" />
+							<label for="V12">V12</label>
+							<input type="number" step="any" name="V12" id="V12" />
+							<label for="V13">V13</label>
+							<input type="number" step="any" name="V13" id="V13" />
+							<label for="V14">V14</label>
+							<input type="number" step="any" name="V14" id="V14" />
+							<label for="V15">V15</label>
+							<input type="number" step="any" name="V15" id="V15" />
+							<label for="V16">V16</label>
+							<input type="number" step="any" name="V16" id="V16" />
+							<label for="V17">V17</label>
+							<input type="number" step="any" name="V17" id="V17" />
+							<label for="V18">V18</label>
+							<input type="number" step="any" name="V18" id="V18" />
+							<label for="V19">V19</label>
+							<input type="number" step="any" name="V19" id="V19" />
+							<label for="V20">V20</label>
+							<input type="number" step="any" name="V20" id="V20" />
+						</div>
+						<div class="col">
+							<label for="V21">V21</label>
+							<input type="number" step="any" name="V21" id="V21" />
+							<label for="V22">V22</label>
+							<input type="number" step="any" name="V22" id="V22" />
+							<label for="V23">V23</label>
+							<input type="number" step="any" name="V23" id="V23" />
+							<label for="V24">V24</label>
+							<input type="number" step="any" name="V24" id="V24" />
+							<label for="V25">V25</label>
+							<input type="number" step="any" name="V25" id="V25" />
+							<label for="V26">V26</label>
+							<input type="number" step="any" name="V26" id="V26" />
+							<label for="V27">V27</label>
+							<input type="number" step="any" name="V27" id="V27" />
+							<label for="V28">V28</label>
+							<input type="number" step="any" name="V28" id="V28" />
+						</div>
+					</div>
+				</details>
+
+				<button type="submit">Predict</button>
+			</form>
+		</div>
+	</div>
+</body>
+</html> 
