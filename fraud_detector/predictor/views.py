@@ -23,7 +23,7 @@ def _get_config():
 	return apps.get_app_config('predictor')
 
 def home(request: HttpRequest) -> HttpResponse:
-	"""Landing page with system status.""""
+	"""Landing page with system status."""
 	config = _get_config()
 	model_ready = config.pipeline is not None
 	return render(request, "predictor/home.html", {
@@ -32,7 +32,7 @@ def home(request: HttpRequest) -> HttpResponse:
 	})
 
 def health_check(request: HttpRequest) -> JsonResponse:
-	""Internal health monitor for Kubernetes/Status pages.""""
+	"""Internal health monitor for Kubernetes/Status pages."""
 	config = _get_config()
 	status = "healthy" if config.pipeline else "unhealthy"
 	return JsonResponse({
