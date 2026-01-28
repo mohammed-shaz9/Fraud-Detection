@@ -1,0 +1,98 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fraud Guard | AI Detection</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Fraud Guard AI 2.0</h1>
+            <p>Enterprise-grade credit card transaction security powered by real-time machine learning inference.</p>
+        </div>
+
+        {% if error %}
+            <div class="error">{{ error }}</div>
+        {% endif %}
+        
+        {% if not model_ready %}
+            <div class="error">
+                System Offline: Model weights not detected. 
+                <br><small>Execute training pipeline to initialize engine.</small>
+            </div>
+        {% endif %}
+
+        <div class="card">
+            <form method="POST" action="{% url 'predict' %}">
+                {% csrf_token %}
+                
+                <div class="row">
+                    <div class="form-group">
+                        <label for="Time">Timestamp</label>
+                        <div class="input-wrapper">
+                            <input type="number" step="any" min="0" name="Time" id="Time" placeholder="Seconds since sequence" required>
+                            <span class="badge">SEC</span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="Amount">Transaction Volume</label>
+                        <div class="input-wrapper">
+                            <input type="number" step="any" min="0" name="Amount" id="Amount" placeholder="Processing amount" required>
+                            <span class="badge">USD</span>
+                        </div>
+                    </div>
+                </div>
+
+                <details>
+                    <summary>Advanced PCA Vectors (V1 - V28)</summary>
+                    <div class="advanced-grid">
+                        <div class="form-group"><label>V1</label><input type="number" step="any" name="V1"></div>
+                        <div class="form-group"><label>V2</label><input type="number" step="any" name="V2"></div>
+                        <div class="form-group"><label>V3</label><input type="number" step="any" name="V3"></div>
+                        <div class="form-group"><label>V4</label><input type="number" step="any" name="V4"></div>
+                        <div class="form-group"><label>V5</label><input type="number" step="any" name="V5"></div>
+                        <div class="form-group"><label>V6</label><input type="number" step="any" name="V6"></div>
+                        <div class="form-group"><label>V7</label><input type="number" step="any" name="V7"></div>
+                        <div class="form-group"><label>V8</label><input type="number" step="any" name="V8"></div>
+                        <div class="form-group"><label>V9</label><input type="number" step="any" name="V9"></div>
+                        <div class="form-group"><label>V10</label><input type="number" step="any" name="V10"></div>
+                        <div class="form-group"><label>V11</label><input type="number" step="any" name="V11"></div>
+                        <div class="form-group"><label>V12</label><input type="number" step="any" name="V12"></div>
+                        <div class="form-group"><label>V13</label><input type="number" step="any" name="V13"></div>
+                        <div class="form-group"><label>V14</label><input type="number" step="any" name="V14"></div>
+                        <div class="form-group"><label>V15</label><input type="number" step="any" name="V15"></div>
+                        <div class="form-group"><label>V16</label><input type="number" step="any" name="V16"></div>
+                        <div class="form-group"><label>V17</label><input type="number" step="any" name="V17"></div>
+                        <div class="form-group"><label>V18</label><input type="number" step="any" name="V18"></div>
+                        <div class="form-group"><label>V19</label><input type="number" step="any" name="V19"></div>
+                        <div class="form-group"><label>V20</label><input type="number" step="any" name="V20"></div>
+                        <div class="form-group"><label>V21</label><input type="number" step="any" name="V21"></div>
+                        <div class="form-group"><label>V22</label><input type="number" step="any" name="V22"></div>
+                        <div class="form-group"><label>V23</label><input type="number" step="any" name="V23"></div>
+                        <div class="form-group"><label>V24</label><input type="number" step="any" name="V24"></div>
+                        <div class="form-group"><label>V25</label><input type="number" step="any" name="V25"></div>
+                        <div class="form-group"><label>V26</label><input type="number" step="any" name="V26"></div>
+                        <div class="form-group"><label>V27</label><input type="number" step="any" name="V27"></div>
+                        <div class="form-group"><label>V28</label><input type="number" step="any" name="V28"></div>
+                    </div>
+                </details>
+
+                <button type="submit" id="submit-btn">Run Fraud Analysis</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        const btn = document.getElementById('submit-btn');
+        const form = document.querySelector('form');
+        form.onsubmit = () => {
+            btn.innerHTML = 'Analyzing Vectors...';
+            btn.style.opacity = '0.7';
+            btn.style.pointerEvents = 'none';
+        };
+    </script>
+</body>
+</html>

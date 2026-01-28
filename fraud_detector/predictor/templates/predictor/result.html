@@ -1,0 +1,70 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Analysis Report | Fraud Guard</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+    <div class="container result-container">
+        <div class="header">
+            <h1>Analysis Report</h1>
+            <p>Cryptographic verification of transaction vectors complete.</p>
+        </div>
+
+        <div class="card">
+            <div class="status-icon">
+                {% if is_fraud %}
+                    <span style="color: var(--danger);">🛑</span>
+                {% else %}
+                    <span style="color: var(--success);">🛡️</span>
+                {% endif %}
+            </div>
+
+            <div class="message {% if is_fraud %}bad{% else %}good{% endif %}">
+                {{ message }}
+            </div>
+
+            {% if probability is not None %}
+                <div class="prob-card">
+                    <div style="font-size: 0.875rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em;">
+                        Anomaly Confidence Score
+                    </div>
+                    <div class="prob-value">
+                        {{ probability|floatformat:4 }}
+                    </div>
+                    <div style="margin-top: 1rem; width: 100%; height: 8px; background: rgba(255,255,255,0.1); border-radius: 4px; overflow: hidden;">
+                        <div style="width: {% widthratio probability 1 100 %}%; height: 100%; background: linear-gradient(to right, var(--primary), var(--secondary)); box-shadow: 0 0 10px var(--primary);"></div>
+                    </div>
+                </div>
+            {% endif %}
+
+            {% if warnings or defaulted_fields or clipped_fields %}
+                <div class="adjustment-list">
+                    <h3>System Adjustments</h3>
+                    {% for warn in warnings %}
+                        <div class="adjust-item">⚠️ {{ warn }}</div>
+                    {% endfor %}
+                    
+                    {% if defaulted_fields %}
+                        <div class="adjust-item">ℹ️ Derived medians for: <em>{{ defaulted_fields|join:', ' }}</em></div>
+                    {% endif %}
+                    
+                    {% if clipped_fields %}
+                        <div class="adjust-item">✂️ Outlier clipping for: <em>{{ clipped_fields|join:', ' }}</em></div>
+                    {% endif %}
+                </div>
+            {% endif %}
+
+            <div style="margin-top: 2rem; display: flex; justify-content: space-between; align-items: center; color: var(--text-muted); font-size: 0.875rem;">
+                <span>Inference Latency: {{ latency }}</span>
+                <span>ID: {{ timestamp|date:"U"|slice:":8" }}</span>
+            </div>
+
+            <a class="back-btn" href="{% url 'home' %}">Analyze New Sequence</a>
+        </div>
+    </div>
+</body>
+</html>

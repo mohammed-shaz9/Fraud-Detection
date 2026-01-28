@@ -1,0 +1,29 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+.env
+venv/
+ENV/
+
+# Large Data & Archives
+data/
+*.zip
+*.csv
+*.json
+
+# ML Models (keeping the main one, ignoring versioned backups if they get large)
+# models/ 
+
+# Logs
+*.log
+
+# Django
+db.sqlite3
+staticfiles/
+media/
+
+# OS
+.DS_Store
+Thumbs.db
