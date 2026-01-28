@@ -1,17 +1,25 @@
-{% load static %}
+{% load static custom_filters %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Fraud Guard | AI Detection</title>
+    <title>Fraud Guard AI | Enterprise Detection</title>
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="icon" type="image/x-icon" href="https://cdn-icons-png.flaticon.com/512/1045/1045371.png">
 </head>
 <body>
     <div class="container">
         <div class="header">
-            <h1>Fraud Guard AI 2.0</h1>
-            <p>Enterprise-grade credit card transaction security powered by real-time machine learning inference.</p>
+            <div style="display: flex; align-items: center; justify-content: center; gap: 1rem; margin-bottom: 1rem;">
+                <img src="https://cdn-icons-png.flaticon.com/512/1045/1045371.png" width="50" style="filter: hue-rotate(240deg);">
+                <span style="font-size: 1.5rem; font-weight: 800; color: var(--primary);">GUARD CORE</span>
+            </div>
+            <h1>Fraud Guard AI 3.0</h1>
+            <p>Advanced Real-Time Anomaly Detection Engine</p>
+            <div style="margin-top: 1rem; font-size: 0.8rem; color: var(--success); font-weight: 600; text-transform: uppercase;">
+                ● System Status: Operational ({{ system_version }})
+            </div>
         </div>
 
         {% if error %}
@@ -19,69 +27,54 @@
         {% endif %}
         
         {% if not model_ready %}
-            <div class="error">
-                System Offline: Model weights not detected. 
-                <br><small>Execute training pipeline to initialize engine.</small>
+            <div class="error" style="background: rgba(239, 68, 68, 0.2); border: 2px solid var(--danger);">
+                <b>CRITICAL ERROR:</b> Inference engine failed to initialize. 
+                <br><small>Database & Vectors remain secure. Contact dev-ops immediately.</small>
             </div>
         {% endif %}
 
-        <div class="card">
+        <div class="card" style="position: relative; overflow: hidden;">
+            <div style="position: absolute; top: 0; left: 0; width: 100%; height: 4px; background: linear-gradient(90deg, var(--primary), var(--secondary)); opacity: 0.5;"></div>
+            
             <form method="POST" action="{% url 'predict' %}">
                 {% csrf_token %}
                 
                 <div class="row">
                     <div class="form-group">
-                        <label for="Time">Timestamp</label>
+                        <label for="Time">Sequence Hash (Time)</label>
                         <div class="input-wrapper">
-                            <input type="number" step="any" min="0" name="Time" id="Time" placeholder="Seconds since sequence" required>
+                            <input type="number" step="any" min="0" name="Time" id="Time" placeholder="Temporal Vector" required>
                             <span class="badge">SEC</span>
                         </div>
                     </div>
                     <div class="form-group">
-                        <label for="Amount">Transaction Volume</label>
+                        <label for="Amount">Liquidity Vector (Amount)</label>
                         <div class="input-wrapper">
-                            <input type="number" step="any" min="0" name="Amount" id="Amount" placeholder="Processing amount" required>
+                            <input type="number" step="any" min="0" name="Amount" id="Amount" placeholder="USD Volume" required>
                             <span class="badge">USD</span>
                         </div>
                     </div>
                 </div>
 
                 <details>
-                    <summary>Advanced PCA Vectors (V1 - V28)</summary>
+                    <summary style="font-size: 0.9rem; letter-spacing: 0.1em;">ADVANCED NEURAL VECTORS (V1 - V28)</summary>
                     <div class="advanced-grid">
-                        <div class="form-group"><label>V1</label><input type="number" step="any" name="V1"></div>
-                        <div class="form-group"><label>V2</label><input type="number" step="any" name="V2"></div>
-                        <div class="form-group"><label>V3</label><input type="number" step="any" name="V3"></div>
-                        <div class="form-group"><label>V4</label><input type="number" step="any" name="V4"></div>
-                        <div class="form-group"><label>V5</label><input type="number" step="any" name="V5"></div>
-                        <div class="form-group"><label>V6</label><input type="number" step="any" name="V6"></div>
-                        <div class="form-group"><label>V7</label><input type="number" step="any" name="V7"></div>
-                        <div class="form-group"><label>V8</label><input type="number" step="any" name="V8"></div>
-                        <div class="form-group"><label>V9</label><input type="number" step="any" name="V9"></div>
-                        <div class="form-group"><label>V10</label><input type="number" step="any" name="V10"></div>
-                        <div class="form-group"><label>V11</label><input type="number" step="any" name="V11"></div>
-                        <div class="form-group"><label>V12</label><input type="number" step="any" name="V12"></div>
-                        <div class="form-group"><label>V13</label><input type="number" step="any" name="V13"></div>
-                        <div class="form-group"><label>V14</label><input type="number" step="any" name="V14"></div>
-                        <div class="form-group"><label>V15</label><input type="number" step="any" name="V15"></div>
-                        <div class="form-group"><label>V16</label><input type="number" step="any" name="V16"></div>
-                        <div class="form-group"><label>V17</label><input type="number" step="any" name="V17"></div>
-                        <div class="form-group"><label>V18</label><input type="number" step="any" name="V18"></div>
-                        <div class="form-group"><label>V19</label><input type="number" step="any" name="V19"></div>
-                        <div class="form-group"><label>V20</label><input type="number" step="any" name="V20"></div>
-                        <div class="form-group"><label>V21</label><input type="number" step="any" name="V21"></div>
-                        <div class="form-group"><label>V22</label><input type="number" step="any" name="V22"></div>
-                        <div class="form-group"><label>V23</label><input type="number" step="any" name="V23"></div>
-                        <div class="form-group"><label>V24</label><input type="number" step="any" name="V24"></div>
-                        <div class="form-group"><label>V25</label><input type="number" step="any" name="V25"></div>
-                        <div class="form-group"><label>V26</label><input type="number" step="any" name="V26"></div>
-                        <div class="form-group"><label>V27</label><input type="number" step="any" name="V27"></div>
-                        <div class="form-group"><label>V28</label><input type="number" step="any" name="V28"></div>
+                        {% for i in "1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28"|slugify|split:"," %}
+                        {% with v="V"|add:i %}
+                        <div class="form-group">
+                            <label for="{{ v }}" style="font-size: 0.7rem;">Vector {{ v }}</label>
+                            <input type="number" step="any" name="{{ v }}" id="{{ v }}" style="padding: 0.5rem; font-size: 0.8rem;">
+                        </div>
+                        {% endwith %}{% endfor %}
                     </div>
                 </details>
 
-                <button type="submit" id="submit-btn">Run Fraud Analysis</button>
+                <button type="submit" id="submit-btn">EXECUTE NEURAL INFERENCE</button>
             </form>
+        </div>
+
+        <div style="text-align: center; margin-top: 2rem; font-size: 0.75rem; color: var(--text-muted);">
+            SECURITY NOTICE: All inference calls are logged with IP telemetry. Unauthorized scanning is prohibited.
         </div>
     </div>
 
@@ -89,10 +82,21 @@
         const btn = document.getElementById('submit-btn');
         const form = document.querySelector('form');
         form.onsubmit = () => {
-            btn.innerHTML = 'Analyzing Vectors...';
+            btn.innerHTML = '<span style="display:flex; align-items:center; justify-content:center; gap:0.5rem;"><div class="spinner"></div> ANALYZING SYSTEM VECTORS...</span>';
             btn.style.opacity = '0.7';
             btn.style.pointerEvents = 'none';
         };
     </script>
+    <style>
+        .spinner {
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255,255,255,0.3);
+            border-top: 3px solid #fff;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+    </style>
 </body>
 </html>

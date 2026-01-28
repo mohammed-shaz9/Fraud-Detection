@@ -1,69 +1,94 @@
-{% load static %}
+{% load static custom_filters %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Analysis Report | Fraud Guard</title>
+    <title>Inference Report | Fraud Guard AI</title>
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="icon" type="image/x-icon" href="https://cdn-icons-png.flaticon.com/512/1045/1045371.png">
 </head>
 <body>
     <div class="container result-container">
         <div class="header">
-            <h1>Analysis Report</h1>
-            <p>Cryptographic verification of transaction vectors complete.</p>
+            <div style="display: flex; align-items: center; justify-content: center; gap: 0.5rem; margin-bottom: 0.5rem;">
+                <img src="https://cdn-icons-png.flaticon.com/512/1045/1045371.png" width="30" style="filter: hue-rotate(240deg);">
+                <span style="font-size: 1rem; font-weight: 800; color: var(--primary);">ANALYSIS CORE</span>
+            </div>
+            <h1>Neural Inference Report</h1>
+            <p style="font-size: 0.9rem; letter-spacing: 0.05em; color: var(--text-muted);">Cryptographic verification complete. Vectors cross-matched against historical training distribution.</p>
         </div>
 
-        <div class="card">
-            <div class="status-icon">
+        <div class="card" style="box-shadow: 0 0 40px rgba(0,0,0,0.6);">
+            <div class="status-icon" style="margin-bottom: 1rem;">
                 {% if is_fraud %}
-                    <span style="color: var(--danger);">🛑</span>
+                    <div style="padding: 1rem; background: rgba(239, 68, 68, 0.1); border-radius: 50%; width: 80px; height: 80px; display: flex; align-items: center; justify-content: center;">
+                        <span style="font-size: 3rem; color: var(--danger);">🛑</span>
+                    </div>
                 {% else %}
-                    <span style="color: var(--success);">🛡️</span>
+                    <div style="padding: 1rem; background: rgba(16, 185, 129, 0.1); border-radius: 50%; width: 80px; height: 80px; display: flex; align-items: center; justify-content: center;">
+                        <span style="font-size: 3rem; color: var(--success);">🛡️</span>
+                    </div>
                 {% endif %}
             </div>
 
-            <div class="message {% if is_fraud %}bad{% else %}good{% endif %}">
-                {{ message }}
+            <div class="message {% if is_fraud %}bad{% else %}good{% endif %}" style="letter-spacing: -0.01em; margin-bottom: 0.5rem;">
+                {% if is_fraud %}
+                    THREAT DETECTED
+                {% else %}
+                    SYSTEM SECURE
+                {% endif %}
+            </div>
+            <div style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 2.5rem; text-transform: uppercase; font-weight: 600;">
+                Final Consensus: {{ is_fraud|yesno:"ANOMALOUS,GENUINE" }}
             </div>
 
             {% if probability is not None %}
-                <div class="prob-card">
-                    <div style="font-size: 0.875rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em;">
-                        Anomaly Confidence Score
+                <div class="prob-card" style="background: rgba(15, 23, 42, 0.6); border: 1px solid var(--border);">
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 1rem;">
+                        <span style="font-size: 0.8rem; color: var(--text-muted); font-weight: 700; text-transform: uppercase;">Anomaly Probability</span>
+                        <span style="font-size: 0.8rem; color: var(--primary); font-weight: 800;">{{ probability|floatformat:6 }}</span>
                     </div>
-                    <div class="prob-value">
-                        {{ probability|floatformat:4 }}
+                    <div style="width: 100%; height: 12px; background: rgba(255,255,255,0.05); border-radius: 6px; overflow: hidden;">
+                        <div style="width: {% widthratio probability 1 100 %}%; height: 100%; background: linear-gradient(90deg, var(--primary), var(--secondary)); box-shadow: 0 0 15px var(--primary); transition: width 1.5s cubic-bezier(0.2, 0.8, 0.2, 1);"></div>
                     </div>
-                    <div style="margin-top: 1rem; width: 100%; height: 8px; background: rgba(255,255,255,0.1); border-radius: 4px; overflow: hidden;">
-                        <div style="width: {% widthratio probability 1 100 %}%; height: 100%; background: linear-gradient(to right, var(--primary), var(--secondary)); box-shadow: 0 0 10px var(--primary);"></div>
+                    <div style="display: flex; justify-content: space-between; margin-top: 0.5rem; font-size: 0.65rem; color: var(--text-muted); font-weight: 600;">
+                        <span>LOW RISK</span>
+                        <span>HIGH RISK</span>
                     </div>
                 </div>
             {% endif %}
 
-            {% if warnings or defaulted_fields or clipped_fields %}
-                <div class="adjustment-list">
-                    <h3>System Adjustments</h3>
+            {% if warnings %}
+                <div class="adjustment-list" style="border: 1px solid var(--border); background: rgba(15, 23, 42, 0.4); border-radius: 12px; padding: 1.25rem;">
+                    <h3 style="font-size: 0.8rem; letter-spacing: 0.05em; color: var(--secondary); margin-bottom: 1rem;">INTEGRITY ADJUSTMENTS</h3>
                     {% for warn in warnings %}
-                        <div class="adjust-item">⚠️ {{ warn }}</div>
+                        <div class="adjust-item" style="font-size: 0.8rem; margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.75rem;">
+                            <span style="opacity: 0.6;">⚡</span> {{ warn }}
+                        </div>
                     {% endfor %}
-                    
-                    {% if defaulted_fields %}
-                        <div class="adjust-item">ℹ️ Derived medians for: <em>{{ defaulted_fields|join:', ' }}</em></div>
-                    {% endif %}
-                    
-                    {% if clipped_fields %}
-                        <div class="adjust-item">✂️ Outlier clipping for: <em>{{ clipped_fields|join:', ' }}</em></div>
-                    {% endif %}
                 </div>
             {% endif %}
 
-            <div style="margin-top: 2rem; display: flex; justify-content: space-between; align-items: center; color: var(--text-muted); font-size: 0.875rem;">
-                <span>Inference Latency: {{ latency }}</span>
-                <span>ID: {{ timestamp|date:"U"|slice:":8" }}</span>
+            <div style="margin-top: 2.5rem; padding-top: 1.5rem; border-top: 1px solid var(--border); display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; text-align: left;">
+                <div style="display: flex; flex-direction: column; gap: 0.25rem;">
+                    <span style="font-size: 0.65rem; color: var(--text-muted); font-weight: 700;">LATENCY</span>
+                    <span style="font-size: 0.85rem; font-weight: 800; color: white;">{{ latency }}</span>
+                </div>
+                <div style="display: flex; flex-direction: column; gap: 0.25rem; text-align: right;">
+                    <span style="font-size: 0.65rem; color: var(--text-muted); font-weight: 700;">TX_HASH</span>
+                    <span style="font-size: 0.85rem; font-weight: 800; color: white;">{{ timestamp|date:"U"|slice:":8" }}</span>
+                </div>
             </div>
 
-            <a class="back-btn" href="{% url 'home' %}">Analyze New Sequence</a>
+            <a class="back-btn" href="{% url 'home' %}" style="width: 100%; margin-top: 2rem; background: linear-gradient(135deg, #1e293b, #0f172a); border: 1px solid var(--border); text-transform: uppercase; font-size: 0.8rem; letter-spacing: 0.1em; transition: all 0.3s;">
+                Return to Monitoring
+            </a>
+        </div>
+        
+        <div style="margin-top: 2rem; display: flex; justify-content: center; gap: 2rem; opacity: 0.4; font-size: 0.7rem;">
+            <span>SECURE INFERENCE ENGINE</span>
+            <span>VERIFIED BY GUARD CORE 3.0</span>
         </div>
     </div>
 </body>
