@@ -3,9 +3,9 @@ import os
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-SECRET_KEY = "django-insecure-change-this-in-production"
-DEBUG = True
-ALLOWED_HOSTS: list[str] = []
+SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-change-this-in-production')
+DEBUG = os.environ.get('DEBUG', 'True') == 'True'
+ALLOWED_HOSTS = ['*'] # Allows Render to serve your app
 
 INSTALLED_APPS = [
 	"django.contrib.admin",
@@ -19,6 +19,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
 	"django.middleware.security.SecurityMiddleware",
+	"whitenoise.middleware.WhiteNoiseMiddleware", # For static files in production
 	"django.contrib.sessions.middleware.SessionMiddleware",
 	"django.middleware.common.CommonMiddleware",
 	"django.middleware.csrf.CsrfViewMiddleware",
@@ -62,6 +63,7 @@ USE_I18N = True
 USE_TZ = True
 
 STATIC_URL = "static/"
+STATIC_ROOT = BASE_DIR / "staticfiles"
 STATICFILES_DIRS = [BASE_DIR / "static"]
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
@@ -85,16 +87,10 @@ LOGGING = {
 		"console": {
 			"class": "logging.StreamHandler",
 		},
-		"file": {
-			"level": "INFO",
-			"class": "logging.FileHandler",
-			"filename": os.path.join(BASE_DIR, "fraud_detection.log"),
-			"formatter": "json",
-		},
 	},
 	"loggers": {
 		"fraud_detection": {
-			"handlers": ["console", "file"],
+			"handlers": ["console"],
 			"level": "INFO",
 			"propagate": True,
 		},
